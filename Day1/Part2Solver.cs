@@ -4,10 +4,8 @@ namespace Day1;
 
 public class Part2Solver: ISolver<int>
 {
-    public int Solve(string filename)
+    public int Solve(string[] lines)
     {
-        var lines = File.ReadAllLines(filename);
-
         var top = new PriorityQueue<int, int>();
         var current = 0;
         foreach (var line in lines)

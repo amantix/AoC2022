@@ -4,10 +4,8 @@ namespace Day1;
 
 public class Part1Solver: ISolver<int>
 {
-    public int Solve(string filename)
+    public int Solve(string[] lines)
     {
-        var lines = File.ReadAllLines(filename);
-
         var max = 0;
         var current = 0;
         foreach (var line in lines)

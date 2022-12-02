@@ -11,17 +11,17 @@ public class Day1TestsShould
     [TestCaseSource(nameof(GetPart1TestData))]
     public void TestPart1(string inputFileName, int expectedResult)
     {
-        File.ReadAllLines(inputFileName);
+        var lines = File.ReadAllLines(inputFileName);
         var solver = new Part1Solver();
-        solver.Solve(inputFileName).Should().Be(expectedResult);
+        solver.Solve(lines).Should().Be(expectedResult);
     }
     
     [TestCaseSource(nameof(GetPart2TestData))]
     public void TestPart2(string inputFileName, int expectedResult)
     {
-        File.ReadAllLines(inputFileName);
+        var lines = File.ReadAllLines(inputFileName);
         var solver = new Part2Solver();
-        solver.Solve(inputFileName).Should().Be(expectedResult);
+        solver.Solve(lines).Should().Be(expectedResult);
     }
 
     private static IEnumerable<TestCaseData> GetPart1TestData()
