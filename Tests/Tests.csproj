@@ -28,11 +28,18 @@
       <None Update="Day2\sample.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Day3\input.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Day3\sample.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Day1\Day1.csproj" />
       <ProjectReference Include="..\Day2\Day2.csproj" />
+      <ProjectReference Include="..\Day3\Day3.csproj" />
     </ItemGroup>
 
 </Project>
