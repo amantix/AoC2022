@@ -6,92 +6,44 @@ public class Part1Solver : ISolver<int>
 {
     public int Solve(string[] lines)
     {
-        var visited = new int[lines.Length, lines[0].Length];
-        for (var i = 0; i < lines.Length; i++)
-        {
-            visited[i, 0] = 1;
-            visited[i, lines[0].Length - 1] = 1;
-        }
+        var borders = Enumerable.Range(0, lines.Length)
+            .SelectMany(i => new[] { (i, 0), (i, lines[0].Length - 1) })
+            .Concat(Enumerable.Range(0, lines[0].Length)
+                .SelectMany(j => new[] { (0, j), (lines.Length - 1, j) })
+            );
 
-        for (var j = 0; j < lines[0].Length; j++)
-        {
-            visited[0, j] = 1;
-            visited[lines.Length - 1, j] = 1;
-        }
+        var leftToRight = Enumerable.Range(1, lines.Length - 2)
+            .SelectMany(i => Enumerable.Range(1, lines[0].Length - 2)
+                .Select(j => (i, j))
+                .FilterByMax(lines, lines[i][0])
+            );
 
-        //left-right
-        for (var i = 1; i < lines.Length - 1; i++)
-        {
-            var max = lines[i][0];
-            for (var j = 1; j < lines[i].Length - 1; j++)
-            {
-                if (lines[i][j] > max)
-                {
-                    visited[i, j] = 1;
-                }
+        var rightToLeft = Enumerable.Range(1, lines.Length - 2)
+            .SelectMany(i => Enumerable.Range(0, lines[0].Length - 1)
+                .Reverse()
+                .Select(j => (i, j))
+                .FilterByMax(lines, lines[i][^1])
+            );
 
-                max = lines[i][j] > max ? lines[i][j] : max;
-            }
-        }
+        var topDown = Enumerable.Range(1, lines.Length - 2)
+            .SelectMany(j => Enumerable.Range(1, lines[0].Length - 2)
+                .Select(i => (i, j))
+                .FilterByMax(lines, lines[0][j])
+            );
 
-        //right-left
-        for (var i = 1; i < lines.Length - 1; i++)
-        {
-            var max = lines[i][lines[i].Length - 1];
-            for (var j = lines[i].Length - 2; j > 0; j--)
-            {
-                if (lines[i][j] > max)
-                {
-                    visited[i, j] = 1;
-                }
+        var bottomUp = Enumerable.Range(1, lines.Length - 2)
+            .SelectMany(j => Enumerable.Range(0, lines[0].Length - 1)
+                .Reverse()
+                .Select(i => (i, j))
+                .FilterByMax(lines, lines[^1][j])
+            );
 
-                max = lines[i][j] > max ? lines[i][j] : max;
-            }
-        }
-
-        //top-down
-        for (var j = 1; j < lines[0].Length - 1; j++)
-        {
-            var max = lines[0][j];
-            for (var i = 1; i < lines.Length - 1; i++)
-            {
-                if (lines[i][j] > max)
-                {
-                    visited[i, j] = 1;
-                }
-
-                max = lines[i][j] > max ? lines[i][j] : max;
-            }
-        }
-
-        //bottom-up
-        for (var j = 1; j < lines[0].Length - 1; j++)
-        {
-            var max = lines[^1][j];
-            for (var i = lines.Length - 2; i > 0; i--)
-            {
-                if (lines[i][j] > max)
-                {
-                    visited[i, j] = 1;
-                }
-
-                max = lines[i][j] > max ? lines[i][j] : max;
-            }
-        }
-
-
-        var count = 0;
-        for (var i = 0; i < lines.Length; i++)
-        {
-            for (var j = 0; j < lines[i].Length; j++)
-            {
-                if (visited[i, j] == 1)
-                {
-                    count++;
-                }
-            }
-        }
-
-        return count;
+        return borders
+            .Concat(leftToRight)
+            .Concat(rightToLeft)
+            .Concat(topDown)
+            .Concat(bottomUp)
+            .Distinct()
+            .Count();
     }
 }
