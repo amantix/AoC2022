@@ -55,6 +55,12 @@
       <None Update="Day7\sample.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Day8\input.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Day8\sample.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -65,6 +71,7 @@
       <ProjectReference Include="..\Day5\Day5.csproj" />
       <ProjectReference Include="..\Day6\Day6.csproj" />
       <ProjectReference Include="..\Day7\Day7.csproj" />
+      <ProjectReference Include="..\Day8\Day8.csproj" />
     </ItemGroup>
 
 </Project>
