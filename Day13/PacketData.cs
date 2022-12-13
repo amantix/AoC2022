@@ -88,6 +88,16 @@ public class PacketData
 
             return stack.Pop();
         }
+        
+        public class ValueComparer : IComparer<Value>
+        {
+            public int Compare(Value? left, Value? right)
+            {
+                left ??= new List(new());
+                right ??= new List(new());
+                return left.Compare(right);
+            }
+        }
     }
 
     public record Integer(int Value) : Value;
