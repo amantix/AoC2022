@@ -83,8 +83,7 @@ public record BluePrint(
 
             visited.Add((bluePrint.Id, resources, robots));
 
-            //collect resources
-            var nextState = (
+            var commonNextState = (
                 time: time - 1,
                 resources: (
                     ore: resources.ore + robots.oreRobots,
@@ -92,59 +91,62 @@ public record BluePrint(
                     obsidian: resources.obsidian + robots.obsidianRobots,
                     geodes: resources.geodes + robots.geodeRobots),
                 robots);
-            queue.Enqueue(nextState);
+
+            //build geode cracking robot
+            if (resources.ore >= bluePrint.GeodeRobotOreCost && resources.obsidian >= bluePrint.GeodeRobotObsidianCost)
+            {
+                queue.Enqueue(commonNextState with
+                {
+                    resources = commonNextState.resources with
+                    {
+                        ore = commonNextState.resources.ore - bluePrint.GeodeRobotOreCost,
+                        obsidian = commonNextState.resources.obsidian - bluePrint.GeodeRobotObsidianCost
+                    },
+                    robots = commonNextState.robots with { geodeRobots = robots.geodeRobots + 1 }
+                });
+                continue;
+            }
+
+            //collect resources
+            queue.Enqueue(commonNextState);
 
             //build ore collecting robot
             if (resources.ore >= bluePrint.OreRobotOreCost)
             {
-                queue.Enqueue(nextState with
+                queue.Enqueue(commonNextState with
                 {
-                    resources = nextState.resources with
+                    resources = commonNextState.resources with
                     {
-                        ore = nextState.resources.ore - bluePrint.OreRobotOreCost
+                        ore = commonNextState.resources.ore - bluePrint.OreRobotOreCost
                     },
-                    robots = nextState.robots with { oreRobots = robots.oreRobots + 1 }
+                    robots = commonNextState.robots with { oreRobots = robots.oreRobots + 1 }
                 });
             }
 
             //build clay collecting robot
             if (resources.ore >= bluePrint.ClayRobotOreCost)
             {
-                queue.Enqueue(nextState with
+                queue.Enqueue(commonNextState with
                 {
-                    resources = nextState.resources with
+                    resources = commonNextState.resources with
                     {
-                        ore = nextState.resources.ore - bluePrint.ClayRobotOreCost
+                        ore = commonNextState.resources.ore - bluePrint.ClayRobotOreCost
                     },
-                    robots = nextState.robots with { clayRobots = robots.clayRobots + 1 }
+                    robots = commonNextState.robots with { clayRobots = robots.clayRobots + 1 }
                 });
             }
 
             //build obsidian collecting robot
             if (resources.ore >= bluePrint.ObsidianRobotOreCost && resources.clay >= bluePrint.ObsidianRobotClayCost)
             {
-                queue.Enqueue(nextState with
+                queue.Enqueue(commonNextState with
                 {
-                    resources = nextState.resources with
+                    resources = commonNextState.resources with
                     {
-                        ore = nextState.resources.ore - bluePrint.ObsidianRobotOreCost,
-                        clay = nextState.resources.clay - bluePrint.ObsidianRobotClayCost
+                        ore = commonNextState.resources.ore - bluePrint.ObsidianRobotOreCost,
+                        clay = commonNextState.resources.clay - bluePrint.ObsidianRobotClayCost
                     },
-                    robots = nextState.robots with { obsidianRobots = robots.obsidianRobots + 1 }
-                });
-            }
-
-            //build geode cracking robot
-            if (resources.ore >= bluePrint.GeodeRobotOreCost && resources.obsidian >= bluePrint.GeodeRobotObsidianCost)
-            {
-                queue.Enqueue(nextState with
-                {
-                    resources = nextState.resources with
-                    {
-                        ore = nextState.resources.ore - bluePrint.GeodeRobotOreCost,
-                        obsidian = nextState.resources.obsidian - bluePrint.GeodeRobotObsidianCost
-                    },
-                    robots = nextState.robots with { geodeRobots = robots.geodeRobots + 1 }
+                    robots = commonNextState.robots with { obsidianRobots = robots.obsidianRobots + 1 }
                 });
             }
         }
